@@ -1,31 +1,58 @@
 const usernameInput = document.getElementById("username");
 const searchBtn = document.getElementById("searchBtn");
+
 const profile = document.getElementById("profile");
+const loading = document.getElementById("loading");
+const error = document.getElementById("error");
 
 searchBtn.addEventListener("click", async () => {
 
     const username = usernameInput.value;
 
-    const response = await fetch(
-        `https://api.github.com/users/${username}`
-    );
+    loading.classList.remove("hidden");
 
-    const data = await response.json();
+    error.classList.add("hidden");
 
-    profile.innerHTML = `
-    
-        <div class="profile-card">
+    profile.innerHTML = "";
 
-            <img src="${data.avatar_url}" alt="profile image">
+    try {
 
-            <h2>${data.name}</h2>
+        const response = await fetch(
+            `https://api.github.com/users/${username}`
+        );
 
-            <p>Public Repos: ${data.public_repos}</p>
+        if(!response.ok){
+            throw new Error("User not found");
+        }
 
-            <p>Followers: ${data.followers}</p>
+        const data = await response.json();
 
-        </div>
+        profile.innerHTML = `
+        
+            <div class="profile-card">
 
-    `;
+                <img src="${data.avatar_url}" alt="profile image">
+
+                <h2>${data.name}</h2>
+
+                <p>Public Repos: ${data.public_repos}</p>
+
+                <p>Followers: ${data.followers}</p>
+
+            </div>
+
+        `;
+
+    } catch(err){
+
+        error.classList.remove("hidden");
+
+        error.innerText = err.message;
+
+    } finally {
+
+        loading.classList.add("hidden");
+
+    }
 
 });
