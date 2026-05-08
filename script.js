@@ -1,5 +1,6 @@
 const usernameInput = document.getElementById("username");
 const searchBtn = document.getElementById("searchBtn");
+const profile = document.getElementById("profile");
 
 searchBtn.addEventListener("click", async () => {
 
@@ -11,6 +12,20 @@ searchBtn.addEventListener("click", async () => {
 
     const data = await response.json();
 
-    console.log(data);
+    profile.innerHTML = `
+    
+        <div class="profile-card">
+
+            <img src="${data.avatar_url}" alt="profile image">
+
+            <h2>${data.name}</h2>
+
+            <p>Public Repos: ${data.public_repos}</p>
+
+            <p>Followers: ${data.followers}</p>
+
+        </div>
+
+    `;
 
 });
