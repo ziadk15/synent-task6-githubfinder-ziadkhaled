@@ -5,9 +5,15 @@ const profile = document.getElementById("profile");
 const loading = document.getElementById("loading");
 const error = document.getElementById("error");
 
-searchBtn.addEventListener("click", async () => {
+async function getGitHubUser() {
 
-    const username = usernameInput.value;
+    const username = usernameInput.value.trim();
+
+    if(username === ""){
+        error.classList.remove("hidden");
+        error.innerText = "Please enter a username";
+        return;
+    }
 
     loading.classList.remove("hidden");
 
@@ -33,11 +39,19 @@ searchBtn.addEventListener("click", async () => {
 
                 <img src="${data.avatar_url}" alt="profile image">
 
-                <h2>${data.name}</h2>
+                <h2>${data.name || data.login}</h2>
+
+                <p>${data.bio || "No bio available"}</p>
 
                 <p>Public Repos: ${data.public_repos}</p>
 
                 <p>Followers: ${data.followers}</p>
+
+                <p>Following: ${data.following}</p>
+
+                <a href="${data.html_url}" target="_blank">
+                    Visit Profile
+                </a>
 
             </div>
 
@@ -53,6 +67,16 @@ searchBtn.addEventListener("click", async () => {
 
         loading.classList.add("hidden");
 
+    }
+
+}
+
+searchBtn.addEventListener("click", getGitHubUser);
+
+usernameInput.addEventListener("keypress", (e) => {
+
+    if(e.key === "Enter"){
+        getGitHubUser();
     }
 
 });
